@@ -1,0 +1,43 @@
+name: sam-3d-body-lazy-docker
+
+services:
+  sam-3d-body-lazy-docker:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+      args:
+        USER_ID: ${HOST_UID:-1000}
+        GROUP_ID: ${HOST_GID:-1000}
+        CUDA_ARCH_LIST: "8.9;12.0+PTX"
+        MAX_JOBS: "8"
+        INSTALL_MOGE: ${INSTALL_MOGE:-false}
+        INSTALL_SAM3: ${INSTALL_SAM3:-false}
+        
+
+    container_name: sam-3d-body-lazy-docker
+
+    # Run as host UID/GID so files written into the bind mount stay owned by you
+    user: "${HOST_UID:-1000}:${HOST_GID:-1000}"
+
+    gpus: all
+
+    environment:
+      NVIDIA_VISIBLE_DEVICES: all
+      NVIDIA_DRIVER_CAPABILITIES: all
+      PYOPENGL_PLATFORM: egl
+      FORCE_EGL_DEVICE: "0"
+      CUDA_HOME: /usr/local/cuda
+      CUDA_PATH: /usr/local/cuda
+      TORCH_CUDA_ARCH_LIST: "8.9;12.0+PTX"
+      PYTHONUNBUFFERED: "1"
+      HF_TOKEN: ${HF_TOKEN}
+
+
+    working_dir: /workspace/sam-3d-body-lazy-docker
+
+    volumes:
+      - ..:/workspace/sam-3d-body-lazy-docker
+
+    stdin_open: true
+    tty: true
+    command: ["bash"]

@@ -91,6 +91,8 @@ dmypy.json
 *.pth
 *.ckpt
 /checkpoints/
+/inputs/
+/outputs/
 
 # Project-specific: Data files
 *.npy
